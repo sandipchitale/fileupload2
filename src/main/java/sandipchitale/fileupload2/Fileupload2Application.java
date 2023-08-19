@@ -66,17 +66,19 @@ public class Fileupload2Application {
 					MultiValueMap<String, Object> bodyMap = new LinkedMultiValueMap<>();
 					if (itemIterator.hasNext()) {
 						FileItemInput fileItemInput = itemIterator.next();
-						FileItemHeaders fileItemInputHeaders = fileItemInput.getHeaders();
+						if (!fileItemInput.isFormField()) {
+							FileItemHeaders fileItemInputHeaders = fileItemInput.getHeaders();
 
-						System.out.println("Received file: Field: " + fileItemInput.getFieldName() + " Filename: " + fileItemInput.getName() + " content type: " + fileItemInput.getContentType());
-						System.out.println("FileItemInputHeaders = " + fileItemInputHeaders);
+							System.out.println("Received file: Field: " + fileItemInput.getFieldName() + " Filename: " + fileItemInput.getName() + " content type: " + fileItemInput.getContentType());
+							System.out.println("FileItemInputHeaders = " + fileItemInputHeaders);
 
-						MultiValueMap<String, String> fileMap = new LinkedMultiValueMap<>();
-						fileMap.add(HttpHeaders.CONTENT_DISPOSITION, fileItemInputHeaders.getHeader(HttpHeaders.CONTENT_DISPOSITION));
-						fileMap.add(HttpHeaders.CONTENT_TYPE, fileItemInputHeaders.getHeader(HttpHeaders.CONTENT_TYPE));
+							MultiValueMap<String, String> fileMap = new LinkedMultiValueMap<>();
+							fileMap.add(HttpHeaders.CONTENT_DISPOSITION, fileItemInputHeaders.getHeader(HttpHeaders.CONTENT_DISPOSITION));
+							fileMap.add(HttpHeaders.CONTENT_TYPE, fileItemInputHeaders.getHeader(HttpHeaders.CONTENT_TYPE));
 
-						HttpEntity<InputStreamResource> entity = new HttpEntity<>(new InputStreamResource(fileItemInput.getInputStream()), fileMap);
-						bodyMap.add(fileItemInput.getFieldName(), entity);
+							HttpEntity<InputStreamResource> entity = new HttpEntity<>(new InputStreamResource(fileItemInput.getInputStream()), fileMap);
+							bodyMap.add(fileItemInput.getFieldName(), entity);
+						}
 					}
 
 					HttpHeaders httpHeaders = new HttpHeaders(requestHeaders);
