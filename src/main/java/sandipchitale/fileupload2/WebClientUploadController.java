@@ -4,7 +4,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,7 +22,7 @@ public class WebClientUploadController {
 
     @PostMapping("/upload")
     public ResponseEntity<byte[]> upload(HttpServletRequest httpServletRequest,
-                                         @RequestHeader MultiValueMap<String, String> requestHeaders) throws IOException {
+                                         @RequestHeader HttpHeaders requestHeaders) throws IOException {
         if (httpServletRequest.getContentType().toLowerCase().startsWith("multipart/form-data")) {
             byte[] responseBytes = webClientBuilder
                     .build()
