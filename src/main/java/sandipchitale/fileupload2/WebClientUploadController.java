@@ -26,8 +26,8 @@ public class WebClientUploadController {
     public WebClientUploadController() {
         this.webClientBuilder = WebClient.builder()
                 .baseUrl("http://localhost:9000")
-                .filter(getXTimeoutMillisFilter())
-                .filter(getXFrameOptionsFilter());
+                .filter(getRequestProcessorFilter())
+                .filter(getResponseProcessorFilter());
     }
 
     /**
@@ -36,7 +36,7 @@ public class WebClientUploadController {
      *
      * @return
      */
-    private static ExchangeFilterFunction getXTimeoutMillisFilter() {
+    private static ExchangeFilterFunction getRequestProcessorFilter() {
         return ExchangeFilterFunction.ofRequestProcessor((ClientRequest clientRequest) -> {
             String timeoutMillis = clientRequest.headers().getFirst("X-Timeout-Millis");
             if (timeoutMillis != null) {
@@ -62,7 +62,7 @@ public class WebClientUploadController {
      *
      * @return
      */
-    private static ExchangeFilterFunction getXFrameOptionsFilter() {
+    private static ExchangeFilterFunction getResponseProcessorFilter() {
         return ExchangeFilterFunction.ofResponseProcessor((ClientResponse clientResponse) -> {
             clientResponse = clientResponse
                     .mutate()
